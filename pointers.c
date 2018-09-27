@@ -15,14 +15,14 @@ void example_1()
 
 void good_allocate(int** p)
 {
-  *p = (int*)malloc(sizeof(int));
-  **p = 42;
+    *p = (int*)malloc(sizeof(int));
+    **p = 42;
 }
 
 void bad_allocate(int* p)
 {
-  p = (int*)malloc(sizeof(int));
-  *p = 52;
+    p = (int*)malloc(sizeof(int));
+    *p = 52;
 }
 
 void example_2()
@@ -42,9 +42,9 @@ void example_2()
 int main(int argc, char** argv)
 {
     for(int i = 1; i<argc; ++i)
-    {
-        printf("%s, ", argv[i]);
-    }
+        {
+            printf("%s, ", argv[i]);
+        }
 
     example_1();
     example_2();
