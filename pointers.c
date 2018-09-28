@@ -1,5 +1,10 @@
 #include <stdio.h>
 
+void copy(int *ptr)
+{
+    printf("ptr %p, adres %p\n", ptr, &ptr);
+}
+
 void example_1()
 {
     printf("\nEXAMPLE 1\n");
@@ -7,6 +12,9 @@ void example_1()
     int x = 42;
     int *px = &x;
     int **ppx = &px;
+
+    printf("x %d, adres %p\n", x, &x);
+    copy(&x);
 
     printf("Arg x: %d, adres x: %p\n", x, &x );
     printf("Deref px: %d, arg px: %p, adres px: %p\n", *px, px, &px);
