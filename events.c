@@ -33,43 +33,47 @@ void example_1()
 /* Event handler is a callback which is related to event
  * */
 
-struct event_cb;
+struct event;
 
-typedef void (*event_cb_t)(const struct event_cb *evt, void *user_data);
+typedef void (*callback_t)(const struct event *evt, void *user_data);
 
-struct event_cb
+struct event
 {
-    event_cb_t cb;
+    callback_t ptr_fun;
     void *data;
 };
 
-static struct event_cb saved = { 0, 0 };
-
-void event_cb_register(event_cb_t cb, void *user_data)
+void event_register(struct event *evt, callback_t cb, void *data)
 {
-    saved.cb = cb;
-    saved.data = user_data;
+    evt->ptr_fun = cb;
+    evt->data = (const char*) data;
 }
 
-static void my_event_cb(const struct event_cb *evt, void *data)
+static void my_event_handler(const struct event *evt, void *data)
 {
     printf("in %s\n", __func__);
-    printf("data1: %s\n", (const char *)data);
-    printf("data2: %s\n", (const char *)evt->data);
+    printf("data: %s\n", (const char *)data);
+    printf("evt->data: %s\n", (const char *)evt->data);
+}
+
+void emit_event(const struct event *evt, const char *str)
+{
+    printf("Emit signal\n");
+    evt->ptr_fun(evt, str);
 }
 
 void example_2()
 {
     printf("\nEXAMPLE 2\n");
 
-    char* ptr = "Hello!";
-    char* start = "start data";
-    event_cb_register(my_event_cb, start);
+    struct event my_evt;
+    const char *str = "Hello World!";
+
+    event_register(&my_evt, my_event_handler, str);
+
     for(int i = 0; i< 3; ++i)
     {
-        printf("%i: ", i);
-        saved.cb(&saved, saved.data);
-        if(i == 1) event_cb_register(my_event_cb, ptr);
+        if(i == 1) emit_event(&my_evt, str);
     }
 }
 
