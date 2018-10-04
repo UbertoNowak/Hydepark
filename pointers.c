@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 void copy(int *ptr)
 {
@@ -56,7 +57,6 @@ int main(int argc, char** argv)
 
     example_1();
     example_2();
-
 
     return 0;
 }
