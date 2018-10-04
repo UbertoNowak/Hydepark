@@ -33,47 +33,83 @@ void example_1()
 /* Event handler is a callback which is related to event
  * */
 
-struct event;
+struct event_handler;
 
-typedef void (*callback_t)(const struct event *evt, void *user_data);
+enum EV_TYPE{
+    EV_CLICK,
+    EV_CLOSE,
+    EV_TYPE_MAX
+};
 
-struct event
+typedef void (*callback_t)(void *user_data);
+
+struct event_handler
 {
     callback_t ptr_fun;
     void *data;
 };
 
-void event_register(struct event *evt, callback_t cb, void *data)
+static struct event_handler events[EV_TYPE_MAX];
+
+static void ev_handler_click(void*data)
 {
-    evt->ptr_fun = cb;
-    evt->data = (const char*) data;
+    printf("Click window: %s\n", (char*)data);
 }
 
-static void my_event_handler(const struct event *evt, void *data)
+static void ev_handler_close(void*data)
 {
-    printf("in %s\n", __func__);
-    printf("data: %s\n", (const char *)data);
-    printf("evt->data: %s\n", (const char *)evt->data);
+    printf("Close window: %s\n", (char*)data);
 }
 
-void emit_event(const struct event *evt, const char *str)
+// we register event handler to type
+void event_register(enum EV_TYPE type, callback_t cb, void *data)
 {
-    printf("Emit signal\n");
-    evt->ptr_fun(evt, str);
+    switch(type)
+    {
+    case EV_CLICK:
+        events[EV_CLICK].ptr_fun = cb;
+        events[EV_CLICK].data = data;
+        break;
+    case EV_CLOSE:
+        events[EV_CLOSE].ptr_fun = cb;
+        events[EV_CLOSE].data = data;
+        break;
+    case EV_TYPE_MAX:
+        printf("Wrong type\n");
+        break;
+    }
 }
 
 void example_2()
 {
     printf("\nEXAMPLE 2\n");
 
-    struct event my_evt;
-    const char *str = "Hello World!";
+    event_register(EV_CLICK, ev_handler_click, NULL);
+    event_register(EV_CLOSE, ev_handler_close, NULL);
 
-    event_register(&my_evt, my_event_handler, str);
-
-    for(int i = 0; i< 3; ++i)
+    for(int i = 0; i< 6; ++i)
     {
-        if(i == 1) emit_event(&my_evt, str);
+        for(int x = 0; x<EV_TYPE_MAX; ++x)
+        {
+            if(events[x].data != NULL)
+            {
+                events[x].ptr_fun(events[x].data);
+                events[x].data = NULL;
+            }
+        }
+
+        if( i < 2)
+        {
+            // register event
+            events[0].data = (void*)"first";
+        }
+
+        if( i > 3)
+        {
+            // register event
+            events[1].data = (void*)"second";
+        }
+
     }
 }
 
