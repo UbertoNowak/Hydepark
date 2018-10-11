@@ -17,4 +17,4 @@ $(objects_cpp): %: %.cpp
 .PHONY : clean all
 
 clean:
-	rm $(objects_c) $(objects_cpp) *.o
+	rm $(objects_c) $(objects_cpp)
