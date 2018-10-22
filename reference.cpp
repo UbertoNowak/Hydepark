@@ -51,9 +51,30 @@ void example_2()
     std::cout<<"value: "<< value <<", x: "<<x<<"\n";
 }
 
+void getRef(int& ref)
+{
+    ref++;
+}
+
+void getPtr(int* ptr)
+{
+    (*ptr)++;
+    getRef(*ptr);
+}
+
+void example_3()
+{
+    std::cout<<"\nEXAMPLE 3\n";
+    int x = 0;
+    getPtr(&x);
+    getRef(x);
+    std::cout<< x <<"\n";
+}
+
 int main(int argc, char **argv)
 {
     example_1();
     example_2();
+    example_3();
     return 0;
 }
